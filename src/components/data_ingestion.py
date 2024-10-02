@@ -29,7 +29,7 @@ class DataIngestion:
         print(f"Connected to database: {self.database}")
         
         # Get GitHub API URL from the config file
-        self.github_url = config.get('API', 'github_url')
+        self.github_url = config.get('DATA', 'github_url')
     
     # Fetch file URLs from GitHub API
     def fetch_file_urls(self):
