@@ -1,0 +1,5 @@
+setup.py
+src/Truck_delay.egg-info/PKG-INFO
+src/Truck_delay.egg-info/SOURCES.txt
+src/Truck_delay.egg-info/dependency_links.txt
+src/Truck_delay.egg-info/top_level.txt

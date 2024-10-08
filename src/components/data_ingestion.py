@@ -3,6 +3,77 @@ import pandas as pd
 import requests
 from sqlalchemy import create_engine
 import configparser
+
+class DataIngestion:
+    def __init__(self, config_path):
+        config = configparser.RawConfigParser()
+        config.read(config_path)
+
+        # Database credentials
+        self.username = config.get('Database', 'username')
+        self.password = config.get('Database', 'password')
+        self.host = config.get('Database', 'host')
+        self.port = config.get('Database', 'port')
+        self.database = config.get('Database', 'dbname')
+
+        # Set up SQLAlchemy engine to connect to PostgreSQL
+        self.engine = create_engine(f'postgresql+psycopg2://{self.username}:{self.password}@{self.host}:{self.port}/{self.database}')
+        print(f"Connected to database: {self.database}")
+
+        # Get GitHub API URL from the config file
+        self.github_url = config.get('DATA', 'github_url')
+
+    # Fetch file URLs from GitHub API
+    def fetch_file_urls(self):
+        response = requests.get(self.github_url)
+        if response.status_code == 200:
+            files = response.json()
+            # Filter out only CSV files
+            csv_files = [file['download_url'] for file in files if file['name'].endswith('.csv')]
+            return csv_files
+        else:
+            raise Exception(f"Failed to fetch file URLs from GitHub API: {response.status_code}")
+
+    # Fetch data from GitHub and store it in PostgreSQL
+    def fetch_and_store_data(self):
+        file_urls = self.fetch_file_urls()
+        for url in file_urls:
+            table_name = url.split('/')[-1].replace('.csv', '')
+            print(f"Processing table: {table_name} from {url}")
+            df = pd.read_csv(url)
+            df.to_sql(table_name, self.engine, if_exists='replace', index=False)
+            print(f"Stored {table_name} in the database")
+        self.close_database_connection()
+
+    def load_dataframe(self, table_name):
+        query = f"SELECT * FROM {table_name}"
+        df = pd.read_sql(query, self.engine)
+        self.close_database_connection()
+        return df
+
+    def fetch_data(self, query):
+        with self.engine.connect() as connection:
+            df = pd.read_sql(query, connection)
+        self.close_database_connection()
+        return df
+
+    def fetch_table(self, table_name):
+        query = f"SELECT * FROM {table_name}"
+        df = self.fetch_data(query)
+        self.close_database_connection()
+        return df
+
+    # Close the database connection
+    def close_database_connection(self):
+        if self.engine:
+            self.engine.dispose()  # Properly closes the connection pool
+            print("Database connection closed.")
+'''
+import os
+import pandas as pd
+import requests
+from sqlalchemy import create_engine
+import configparser
 import hopsworks
 
 # Hopsworks project login
@@ -95,7 +166,7 @@ if __name__ == "__main__":
         ingestion.fetch_and_store_data()
     except Exception as e:
         print(f"Error during ingestion: {e}")
-        raise e
+        raise e'''
 
 '''import pandas as pd
 import psycopg2

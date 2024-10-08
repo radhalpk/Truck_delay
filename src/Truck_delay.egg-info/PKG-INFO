@@ -1,0 +1,8 @@
+Metadata-Version: 2.1
+Name: Truck_delay
+Version: 0.0.0
+Summary: End to end ML implementation of truck delay classification problem
+Home-page: https://github.com/radhalpk/Truck_delay
+Author: radhalpk
+Author-email: pavanradhala@gmail.com
+Project-URL: Bug Tracker, https://github.com/radhalpk/Truck_delay/issues
