@@ -1,12 +1,196 @@
-import pandas as pd
-import numpy as np
-from sqlalchemy import create_engine
-import hopsworks
 import configparser
+config = configparser.RawConfigParser()
 from datetime import datetime
+import sys
+import os
+import os.path as path
+import numpy as np
+from sqlalchemy import create_engine,inspect
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import hopsworks
+from sklearn.impute import KNNImputer
+from src.config import *
 
+# Define the path to the configuration file
+CONFIG_FILE_PATH = r'C:\Desktop\Truck Project\src\config\config.ini'
 
 class DataClean:
+    def __init__(self):
+        # Load config file for database credentials and Hopsworks API key
+        self.config = configparser.ConfigParser()
+        self.config.read(CONFIG_FILE_PATH)
+
+        # PostgreSQL Database Config
+        self.db_config = {
+            'dbname': self.config.get('Database', 'dbname'),
+            'user': self.config.get('Database', 'username'),
+            'password': self.config.get('Database', 'password'),
+            'host': self.config.get('Database', 'host'),
+            'port': self.config.get('Database', 'port')
+        }
+
+        # Hopsworks API Key
+        self.hopsworks_api_key = self.config.get('API', 'hopswork_api_key')
+
+        # Hopsworks login
+        self.project = hopsworks.login(api_key_value=self.hopsworks_api_key)
+
+        # Create SQLAlchemy engine
+        self.engine = create_engine(
+            f"postgresql://{self.db_config['user']}:{self.db_config['password']}@{self.db_config['host']}:{self.db_config['port']}/{self.db_config['dbname']}"
+        )
+        
+    def add_id_and_event_time(self, df, id_col_name='id', event_time_col_name='event_time'):
+        """
+        Adds 'id' as a sequential index and 'event_time' as the current date to the DataFrame.
+        
+        Parameters:
+        - df: DataFrame to modify
+        - id_col_name: Name of the 'id' column to be added (default: 'id')
+        - event_time_col_name: Name of the 'event_time' column (default: 'event_time')
+        
+        Returns:
+        - df: Modified DataFrame with 'id' and 'event_time' columns added
+        """
+        # Add 'id' column if it doesn't exist
+        if id_col_name not in df.columns:
+            df[id_col_name] = range(1, len(df) + 1)
+
+        # Add 'event_time' column if it doesn't exist, set to current date
+        if event_time_col_name not in df.columns:
+            df[event_time_col_name] = pd.Timestamp(datetime.today())  # Fix the datetime call
+
+        return df
+    
+    def read_tables(self):
+        """Fetch data from the PostgreSQL database and return all tables as DataFrames."""
+        # Use SQLAlchemy's inspector to get all table names
+        inspector = inspect(self.engine)
+        tables = inspector.get_table_names()
+
+        # Dictionary to store dataframes
+        dataframes = {}
+
+        # Loop through each table and store it in the dictionary as a dataframe
+        for table_name in tables:
+            print(f"Reading data from table {table_name}...")
+            query = f"SELECT * FROM {table_name}"
+            df = pd.read_sql(query, self.engine)
+            dataframes[table_name] = df
+            print(f"Data from {table_name} loaded into dataframe.")
+
+        # Close the engine connection
+        self.engine.dispose()
+
+        # Return the dictionary containing all dataframes
+        return dataframes
+
+    def detect_and_remove_outliers(self, df, columns, method='IQR'):
+        """
+        Detect and remove outliers from the DataFrame using IQR or Z-Score methods.
+        """
+        df_cleaned = df.copy()
+
+        if method == 'IQR':
+            for column in columns:
+                if pd.api.types.is_numeric_dtype(df[column]):
+                    Q1 = df[column].quantile(0.25)
+                    Q3 = df[column].quantile(0.75)
+                    IQR = Q3 - Q1
+                    lower_bound = Q1 - 1.5 * IQR
+                    upper_bound = Q3 + 1.5 * IQR
+                    df_cleaned = df_cleaned[(df_cleaned[column] >= lower_bound) & (df_cleaned[column] <= upper_bound)]
+        elif method == 'Z-Score':
+            for column in columns:
+                if pd.api.types.is_numeric_dtype(df[column]):
+                    mean = df[column].mean()
+                    std_dev = df[column].std()
+                    lower_bound = mean - 3 * std_dev
+                    upper_bound = mean + 3 * std_dev
+                    df_cleaned = df_cleaned[(df_cleaned[column] >= lower_bound) & (df_cleaned[column] <= upper_bound)]
+        else:
+            raise ValueError("Unsupported method. Use 'IQR' or 'Z-Score'.")
+
+        return df_cleaned
+
+    def filling_missing_values(self, dataframe, n_neighbors=5):
+        """Fill missing values in the DataFrame using KNN for numeric columns and mode for non-numeric."""
+        knn_imputer = KNNImputer(n_neighbors=n_neighbors)
+
+        # Separate numeric and non-numeric columns
+        numeric_cols = dataframe.select_dtypes(include=['number']).columns
+        non_numeric_cols = dataframe.select_dtypes(include=['object']).columns
+
+        # Process numeric columns
+        for col in numeric_cols:
+            if dataframe[col].isnull().sum() > 0:
+                dataframe[col] = knn_imputer.fit_transform(dataframe[[col]])
+
+        # Process non-numeric columns
+        for col in non_numeric_cols:
+            if dataframe[col].isnull().sum() > 0:
+                mode_value = dataframe[col].mode()[0]  # Get the most frequent value
+                dataframe[col] = dataframe[col].fillna(mode_value)
+
+        return dataframe
+
+    def remove_columns(self, df, cols_to_remove):
+        """Remove unwanted columns from the DataFrame."""
+        df = df.drop(columns=[col for col in cols_to_remove if col in df.columns], errors='ignore')
+        return df
+
+    def transform_and_clean_data(self, df, date_col, hour_col, columns_to_remove):
+        """Transform date and hour into a single datetime column and remove unwanted columns."""
+        def transform_hour_to_datetime(date, hour):
+            hour_str = str(hour).zfill(4)  # Zero-fill the hour to 4 digits (e.g., 0100)
+            hour_part = hour_str[:2]       # Extract hour part
+            minute_part = hour_str[2:]     # Extract minute part
+            time_str = f"{hour_part}:{minute_part}:00"
+            return pd.Timestamp(f"{date} {time_str}")
+
+        # Apply the transformation
+        df['datetime'] = df.apply(lambda row: transform_hour_to_datetime(row[date_col], row[hour_col]), axis=1)
+
+        # Remove unwanted columns
+        df_cleaned = df.drop(columns=columns_to_remove, axis=1, errors='ignore')
+    
+        return df_cleaned
+
+    def upsert_to_feature_group(self, fs, name, df, primary_key, version=1):
+        """Upsert data to a Hopsworks feature group or create a new feature group if it doesn't exist."""
+        try:
+            # Attempt to get the existing feature group
+            fg = fs.get_feature_group(name=name, version=version)
+            print(f"Feature group '{name}' exists. Upserting data...")
+            fg.insert(df, write_options={"upsert": True})
+        except:
+            # If the feature group doesn't exist, create it
+            print(f"Feature group '{name}' not found. Creating a new feature group...")
+
+            # Create the feature group dynamically from the dataframe schema
+            new_fg = fs.create_feature_group(
+                name=name,
+                version=version,
+                primary_key=primary_key,
+                description=f"Feature group for {name}",
+                event_time='event_time'
+            )
+
+            # Insert data into the new feature group
+            new_fg.insert(df)
+            print(f"Feature group '{name}' created and data inserted.")
+
+    def reg_catvar(self, df, cols):
+        """Regularize categorical variables by converting them to lowercase strings."""
+        for col in cols:
+            df[col] = df[col].apply(lambda x: str(x).lower())
+        return df
+
+
+
+'''class DataClean:
     def __init__(self, config_path):
         # Load config file for database credentials and Hopsworks API key
         self.config = configparser.ConfigParser()
@@ -113,7 +297,7 @@ class DataClean:
 
         try:
             feature_group = self.feature_store.get_feature_group(feature_group_name, version=1)
-            print(f"Feature group '{feature_group_name}' already exists. Skipping insertion.")
+            feature_group.insert(df, write_options={"upsert": True})
         except:
             print(f"Creating new feature group '{feature_group_name}'.")
             try:
@@ -134,4 +318,4 @@ class DataClean:
         commits = feature_group.get_commits()
         if commits:
             feature_group.compute_statistics()
-            print(f"Statistics computed for {feature_group.name}.")
+            print(f"Statistics computed for {feature_group.name}.")'''
