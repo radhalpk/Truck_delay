@@ -41,10 +41,10 @@ class FeatureEngineeringPipeline:
 
             final_df = self.feature_obj.final_merge(origin_destination_weather_df, scheduled_route_traffic, schedule_weather_merge, dataframes['trucks_table'], dataframes['drivers_table'])
 
-            final_df['unique_id'] = range(1, len(final_df) + 1)
-            cols = ['unique_id'] + [col for col in final_df.columns if col != 'unique_id']
-            final_df = final_df[cols]
-            final_df['unique_id'] = final_df['unique_id'].astype(int)
+            #final_df['unique_id'] = range(1, len(final_df) + 1)
+            #cols = ['unique_id'] + [col for col in final_df.columns if col != 'unique_id']
+            #final_df = final_df[cols]
+            #final_df['unique_id'] = final_df['unique_id'].astype(int)
             
             delay_col = final_df.pop('delay')
             final_df['delay'] = delay_col
