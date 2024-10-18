@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/pavankumarradhala/Desktop/projects/Truck_delay/notebooks/mlruns/444780952533550599/b678d13b70cc47bcbf588e8372034a33/artifacts
+end_time: 1729222090649
+entry_point_name: ''
+experiment_id: '444780952533550599'
+lifecycle_stage: active
+run_id: b678d13b70cc47bcbf588e8372034a33
+run_name: Logistic_Regression_GridSearch
+run_uuid: b678d13b70cc47bcbf588e8372034a33
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1729222090645
+status: 3
+tags: []
+user_id: pavankumarradhala

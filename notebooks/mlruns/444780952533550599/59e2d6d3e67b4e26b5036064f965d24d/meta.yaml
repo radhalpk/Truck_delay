@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/pavankumarradhala/Desktop/projects/Truck_delay/notebooks/mlruns/444780952533550599/59e2d6d3e67b4e26b5036064f965d24d/artifacts
+end_time: 1729227380496
+entry_point_name: ''
+experiment_id: '444780952533550599'
+lifecycle_stage: active
+run_id: 59e2d6d3e67b4e26b5036064f965d24d
+run_name: burly-gull-284
+run_uuid: 59e2d6d3e67b4e26b5036064f965d24d
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1729227344601
+status: 3
+tags: []
+user_id: pavankumarradhala

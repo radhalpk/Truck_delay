@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/pavankumarradhala/Desktop/projects/Truck_delay/notebooks/mlruns/444780952533550599/831c46191b4e4fed90a327f32517ee05/artifacts
+end_time: 1729222219777
+entry_point_name: ''
+experiment_id: '444780952533550599'
+lifecycle_stage: active
+run_id: 831c46191b4e4fed90a327f32517ee05
+run_name: rare-bass-30
+run_uuid: 831c46191b4e4fed90a327f32517ee05
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1729222199031
+status: 3
+tags: []
+user_id: pavankumarradhala

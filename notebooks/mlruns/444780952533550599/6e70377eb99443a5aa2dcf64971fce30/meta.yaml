@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/pavankumarradhala/Desktop/projects/Truck_delay/notebooks/mlruns/444780952533550599/6e70377eb99443a5aa2dcf64971fce30/artifacts
+end_time: 1729220067844
+entry_point_name: ''
+experiment_id: '444780952533550599'
+lifecycle_stage: active
+run_id: 6e70377eb99443a5aa2dcf64971fce30
+run_name: smiling-pig-27
+run_uuid: 6e70377eb99443a5aa2dcf64971fce30
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1729220051500
+status: 3
+tags: []
+user_id: pavankumarradhala

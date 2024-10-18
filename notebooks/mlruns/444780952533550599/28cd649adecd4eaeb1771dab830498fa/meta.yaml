@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/pavankumarradhala/Desktop/projects/Truck_delay/notebooks/mlruns/444780952533550599/28cd649adecd4eaeb1771dab830498fa/artifacts
+end_time: null
+entry_point_name: ''
+experiment_id: '444780952533550599'
+lifecycle_stage: active
+run_id: 28cd649adecd4eaeb1771dab830498fa
+run_name: traveling-horse-225
+run_uuid: 28cd649adecd4eaeb1771dab830498fa
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1729220967020
+status: 1
+tags: []
+user_id: pavankumarradhala

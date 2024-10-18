@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/pavankumarradhala/Desktop/projects/Truck_delay/notebooks/mlruns/444780952533550599/2c3f9d9e6a9340e48f98047d77956c30/artifacts
+end_time: 1729220051490
+entry_point_name: ''
+experiment_id: '444780952533550599'
+lifecycle_stage: active
+run_id: 2c3f9d9e6a9340e48f98047d77956c30
+run_name: brawny-dolphin-238
+run_uuid: 2c3f9d9e6a9340e48f98047d77956c30
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1729219747602
+status: 3
+tags: []
+user_id: pavankumarradhala

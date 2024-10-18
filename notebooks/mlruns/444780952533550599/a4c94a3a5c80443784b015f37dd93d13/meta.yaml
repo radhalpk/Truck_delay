@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/pavankumarradhala/Desktop/projects/Truck_delay/notebooks/mlruns/444780952533550599/a4c94a3a5c80443784b015f37dd93d13/artifacts
+end_time: 1729227380496
+entry_point_name: ''
+experiment_id: '444780952533550599'
+lifecycle_stage: active
+run_id: a4c94a3a5c80443784b015f37dd93d13
+run_name: nervous-crane-379
+run_uuid: a4c94a3a5c80443784b015f37dd93d13
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1729227344601
+status: 3
+tags: []
+user_id: pavankumarradhala

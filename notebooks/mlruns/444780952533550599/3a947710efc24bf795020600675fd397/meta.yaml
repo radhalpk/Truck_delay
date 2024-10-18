@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/pavankumarradhala/Desktop/projects/Truck_delay/notebooks/mlruns/444780952533550599/3a947710efc24bf795020600675fd397/artifacts
+end_time: 1729228059043
+entry_point_name: ''
+experiment_id: '444780952533550599'
+lifecycle_stage: active
+run_id: 3a947710efc24bf795020600675fd397
+run_name: placid-finch-67
+run_uuid: 3a947710efc24bf795020600675fd397
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1729227945769
+status: 3
+tags: []
+user_id: pavankumarradhala

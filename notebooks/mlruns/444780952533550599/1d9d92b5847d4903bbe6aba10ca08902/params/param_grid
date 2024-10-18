@@ -1,0 +1,1 @@
+{'n_estimators': [100, 200, 300], 'max_depth': [10, 15, 20], 'min_samples_split': [5, 10, 15], 'min_samples_leaf': [5, 10, 20], 'max_features': ['sqrt', 'log2']}

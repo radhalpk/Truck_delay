@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/pavankumarradhala/Desktop/projects/Truck_delay/notebooks/mlruns/444780952533550599/4d5ec3bac7844fa68407f7f248cacce7/artifacts
+end_time: 1729224462865
+entry_point_name: ''
+experiment_id: '444780952533550599'
+lifecycle_stage: active
+run_id: 4d5ec3bac7844fa68407f7f248cacce7
+run_name: redolent-penguin-284
+run_uuid: 4d5ec3bac7844fa68407f7f248cacce7
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1729224213466
+status: 4
+tags: []
+user_id: pavankumarradhala

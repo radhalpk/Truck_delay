@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/pavankumarradhala/Desktop/projects/Truck_delay/notebooks/mlruns/444780952533550599/956f7e4ec64749d38b43e04b6a09a01c/artifacts
+end_time: 1729228885277
+entry_point_name: ''
+experiment_id: '444780952533550599'
+lifecycle_stage: active
+run_id: 956f7e4ec64749d38b43e04b6a09a01c
+run_name: rumbling-cow-271
+run_uuid: 956f7e4ec64749d38b43e04b6a09a01c
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1729228806290
+status: 3
+tags: []
+user_id: pavankumarradhala

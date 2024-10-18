@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/pavankumarradhala/Desktop/projects/Truck_delay/notebooks/mlruns/444780952533550599/628503f1348b4e5bad8496bcdbd253a3/artifacts
+end_time: 1729219696804
+entry_point_name: ''
+experiment_id: '444780952533550599'
+lifecycle_stage: active
+run_id: 628503f1348b4e5bad8496bcdbd253a3
+run_name: traveling-calf-604
+run_uuid: 628503f1348b4e5bad8496bcdbd253a3
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1729195715230
+status: 3
+tags: []
+user_id: pavankumarradhala

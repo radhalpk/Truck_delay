@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/pavankumarradhala/Desktop/projects/Truck_delay/notebooks/mlruns/444780952533550599/2d8b47a703e243c8a3fac7ea7b14b558/artifacts
+end_time: 1729222240143
+entry_point_name: ''
+experiment_id: '444780952533550599'
+lifecycle_stage: active
+run_id: 2d8b47a703e243c8a3fac7ea7b14b558
+run_name: upset-doe-733
+run_uuid: 2d8b47a703e243c8a3fac7ea7b14b558
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1729222229837
+status: 3
+tags: []
+user_id: pavankumarradhala

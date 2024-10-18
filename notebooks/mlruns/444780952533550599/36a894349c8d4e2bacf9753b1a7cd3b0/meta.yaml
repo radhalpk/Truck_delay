@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/pavankumarradhala/Desktop/projects/Truck_delay/notebooks/mlruns/444780952533550599/36a894349c8d4e2bacf9753b1a7cd3b0/artifacts
+end_time: 1729227666215
+entry_point_name: ''
+experiment_id: '444780952533550599'
+lifecycle_stage: active
+run_id: 36a894349c8d4e2bacf9753b1a7cd3b0
+run_name: defiant-moth-746
+run_uuid: 36a894349c8d4e2bacf9753b1a7cd3b0
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1729227536909
+status: 3
+tags: []
+user_id: pavankumarradhala

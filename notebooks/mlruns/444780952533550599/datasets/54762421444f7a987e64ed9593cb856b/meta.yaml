@@ -1,0 +1,9 @@
+digest: ad1c6f8e
+name: dataset
+profile: '{"features_shape": [5487, 99], "features_size": 543213, "features_nbytes":
+  2172852}'
+schema: '{"mlflow_tensorspec": {"features": "[{\"type\": \"tensor\", \"tensor-spec\":
+  {\"dtype\": \"float32\", \"shape\": [-1, 99]}}]", "targets": null}}'
+source: '{"tags": {"mlflow.user": "pavankumarradhala", "mlflow.source.name": "/Users/pavankumarradhala/Desktop/projects/Truck_delay/myenv2/lib/python3.10/site-packages/ipykernel_launcher.py",
+  "mlflow.source.type": "LOCAL", "mlflow.source.git.commit": "e08f00fab32638d41a52bb58c491984f2edbe86b"}}'
+source_type: code

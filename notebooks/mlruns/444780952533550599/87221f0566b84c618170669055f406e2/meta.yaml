@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/pavankumarradhala/Desktop/projects/Truck_delay/notebooks/mlruns/444780952533550599/87221f0566b84c618170669055f406e2/artifacts
+end_time: 1729226818116
+entry_point_name: ''
+experiment_id: '444780952533550599'
+lifecycle_stage: active
+run_id: 87221f0566b84c618170669055f406e2
+run_name: angry-shrimp-470
+run_uuid: 87221f0566b84c618170669055f406e2
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1729226810843
+status: 3
+tags: []
+user_id: pavankumarradhala
