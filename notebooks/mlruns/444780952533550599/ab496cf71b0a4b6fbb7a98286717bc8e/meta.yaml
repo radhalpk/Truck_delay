@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/pavankumarradhala/Desktop/projects/Truck_delay/notebooks/mlruns/444780952533550599/ab496cf71b0a4b6fbb7a98286717bc8e/artifacts
+end_time: 1729272316879
+entry_point_name: ''
+experiment_id: '444780952533550599'
+lifecycle_stage: active
+run_id: ab496cf71b0a4b6fbb7a98286717bc8e
+run_name: crawling-ram-163
+run_uuid: ab496cf71b0a4b6fbb7a98286717bc8e
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1729272261979
+status: 3
+tags: []
+user_id: pavankumarradhala

@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/pavankumarradhala/Desktop/projects/Truck_delay/notebooks/mlruns/444780952533550599/c448e415ffbe4972aa06624985e76e9c/artifacts
+end_time: 1729272531568
+entry_point_name: ''
+experiment_id: '444780952533550599'
+lifecycle_stage: active
+run_id: c448e415ffbe4972aa06624985e76e9c
+run_name: carefree-shad-906
+run_uuid: c448e415ffbe4972aa06624985e76e9c
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1729272466348
+status: 3
+tags: []
+user_id: pavankumarradhala

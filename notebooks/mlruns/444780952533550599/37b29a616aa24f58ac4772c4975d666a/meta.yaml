@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/pavankumarradhala/Desktop/projects/Truck_delay/notebooks/mlruns/444780952533550599/37b29a616aa24f58ac4772c4975d666a/artifacts
+end_time: 1729273514866
+entry_point_name: ''
+experiment_id: '444780952533550599'
+lifecycle_stage: active
+run_id: 37b29a616aa24f58ac4772c4975d666a
+run_name: debonair-mouse-976
+run_uuid: 37b29a616aa24f58ac4772c4975d666a
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1729273504567
+status: 3
+tags: []
+user_id: pavankumarradhala

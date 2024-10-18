@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/pavankumarradhala/Desktop/projects/Truck_delay/notebooks/mlruns/444780952533550599/7a2df98dfd7e4c9d9d656446e8b61428/artifacts
+end_time: 1729273203978
+entry_point_name: ''
+experiment_id: '444780952533550599'
+lifecycle_stage: active
+run_id: 7a2df98dfd7e4c9d9d656446e8b61428
+run_name: crawling-grub-780
+run_uuid: 7a2df98dfd7e4c9d9d656446e8b61428
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1729273047846
+status: 3
+tags: []
+user_id: pavankumarradhala

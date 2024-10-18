@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/pavankumarradhala/Desktop/projects/Truck_delay/notebooks/mlruns/444780952533550599/62660de59f284d19b08125b41e8a4044/artifacts
+end_time: 1729272531568
+entry_point_name: ''
+experiment_id: '444780952533550599'
+lifecycle_stage: active
+run_id: 62660de59f284d19b08125b41e8a4044
+run_name: thoughtful-sloth-273
+run_uuid: 62660de59f284d19b08125b41e8a4044
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1729272466348
+status: 3
+tags: []
+user_id: pavankumarradhala

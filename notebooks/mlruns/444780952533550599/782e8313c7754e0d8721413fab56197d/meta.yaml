@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/pavankumarradhala/Desktop/projects/Truck_delay/notebooks/mlruns/444780952533550599/782e8313c7754e0d8721413fab56197d/artifacts
+end_time: 1729273806350
+entry_point_name: ''
+experiment_id: '444780952533550599'
+lifecycle_stage: active
+run_id: 782e8313c7754e0d8721413fab56197d
+run_name: blushing-bug-749
+run_uuid: 782e8313c7754e0d8721413fab56197d
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1729273747998
+status: 3
+tags: []
+user_id: pavankumarradhala

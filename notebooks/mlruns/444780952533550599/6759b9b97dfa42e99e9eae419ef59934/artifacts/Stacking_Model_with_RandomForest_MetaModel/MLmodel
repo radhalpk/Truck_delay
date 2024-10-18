@@ -1,0 +1,20 @@
+artifact_path: Stacking_Model_with_RandomForest_MetaModel
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.10.15
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.5.2
+mlflow_version: 2.17.0
+model_size_bytes: 45671397
+model_uuid: a1216e4af08940dbad60c5c6fbd71981
+run_id: 6759b9b97dfa42e99e9eae419ef59934
+utc_time_created: '2024-10-18 18:16:56.439752'
