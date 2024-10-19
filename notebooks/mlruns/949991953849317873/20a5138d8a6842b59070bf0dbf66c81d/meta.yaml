@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/pavankumarradhala/Desktop/projects/Truck_delay/notebooks/mlruns/949991953849317873/20a5138d8a6842b59070bf0dbf66c81d/artifacts
+end_time: 1729316926681
+entry_point_name: ''
+experiment_id: '949991953849317873'
+lifecycle_stage: active
+run_id: 20a5138d8a6842b59070bf0dbf66c81d
+run_name: XGBoost
+run_uuid: 20a5138d8a6842b59070bf0dbf66c81d
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1729316782574
+status: 3
+tags: []
+user_id: pavankumarradhala

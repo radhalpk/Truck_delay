@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/pavankumarradhala/Desktop/projects/Truck_delay/notebooks/mlruns/949991953849317873/89b4ea449a194b19a7f1c07eb3402bc9/artifacts
+end_time: 1729303735288
+entry_point_name: ''
+experiment_id: '949991953849317873'
+lifecycle_stage: active
+run_id: 89b4ea449a194b19a7f1c07eb3402bc9
+run_name: XGBoost_GridSearch_No_Early_Stopping
+run_uuid: 89b4ea449a194b19a7f1c07eb3402bc9
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1729303734077
+status: 3
+tags: []
+user_id: pavankumarradhala

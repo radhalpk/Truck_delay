@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/pavankumarradhala/Desktop/projects/Truck_delay/notebooks/mlruns/949991953849317873/8839ced06ec442b3a982180fb3d0f16c/artifacts
+end_time: 1729305364257
+entry_point_name: ''
+experiment_id: '949991953849317873'
+lifecycle_stage: active
+run_id: 8839ced06ec442b3a982180fb3d0f16c
+run_name: Random_Forest_Regularized
+run_uuid: 8839ced06ec442b3a982180fb3d0f16c
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1729305362919
+status: 3
+tags: []
+user_id: pavankumarradhala

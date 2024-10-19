@@ -1,0 +1,15 @@
+artifact_uri: mlflow-artifacts:/0/68b30a4b20f149328b99218a40c30934/artifacts
+end_time: 1729360935511
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 68b30a4b20f149328b99218a40c30934
+run_name: capable-auk-759
+run_uuid: 68b30a4b20f149328b99218a40c30934
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1729360933487
+status: 3
+tags: []
+user_id: pavankumarradhala
