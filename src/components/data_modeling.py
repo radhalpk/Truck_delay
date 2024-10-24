@@ -224,7 +224,7 @@ class ModelTrainer:
         
         return train_df, validation_df, test_df
 
-    def prepare_data(self, train_df, validation_df, test_df, cts_cols, categorical_cols, encode_columns):
+    '''def prepare_data(self, train_df, validation_df, test_df, cts_cols, categorical_cols, encode_columns):
         """Prepares data for training by encoding specified categorical features and scaling continuous features."""
         
         # Separate target variable (delay)
@@ -255,6 +255,10 @@ class ModelTrainer:
         X_valid_encoded = encoder.transform(X_valid[encode_columns])
         X_test_encoded = encoder.transform(X_test[encode_columns])
         
+        # Save the encoder in the model directory
+        encoder_file_path = os.path.join(self.model_dir, 'encoder.pkl')
+        with open(encoder_file_path, 'wb') as f:
+           pickle.dump(encoder, f)
         # Convert the encoded arrays back into DataFrames with column names
         encoded_train_df = pd.DataFrame(X_train_encoded, columns=encoder.get_feature_names_out(encode_columns))
         encoded_valid_df = pd.DataFrame(X_valid_encoded, columns=encoder.get_feature_names_out(encode_columns))
@@ -280,7 +284,91 @@ class ModelTrainer:
         print(X_test.isnull().sum().sum())
         print(X_valid.isnull().sum().sum())
         
-        return X_train, X_valid, X_test, y_train, y_valid, y_test
+        # Save the scaler in the model directory
+        scaler_file_path = os.path.join(self.model_dir, 'standardscaler.pkl')
+        with open(scaler_file_path, 'wb') as f:
+           pickle.dump(scaler, f)
+        return X_train, X_valid, X_test, y_train, y_valid, y_test'''
+    
+    def prepare_data(self, train_df, validation_df, test_df, cts_cols, categorical_cols, encode_columns):
+       """Prepares data for training by encoding specified categorical features and scaling continuous features."""
+    
+    # Separate target variable (delay)
+       y_train = train_df['delay']
+       y_valid = validation_df['delay']
+       y_test = test_df['delay']
+    
+    # Feature sets (X)
+       X_train = train_df[cts_cols + categorical_cols].copy()
+       X_valid = validation_df[cts_cols + categorical_cols].copy()
+       X_test = test_df[cts_cols + categorical_cols].copy()
+    
+    # Reset the index to avoid misalignment after transformations
+       X_train.reset_index(drop=True, inplace=True)
+       X_valid.reset_index(drop=True, inplace=True)
+       X_test.reset_index(drop=True, inplace=True)
+       y_train.reset_index(drop=True, inplace=True)
+       y_valid.reset_index(drop=True, inplace=True)
+       y_test.reset_index(drop=True, inplace=True)
+
+    # Convert all integer columns to float64
+       X_train = X_train.astype({col: 'float64' for col in X_train.select_dtypes('int').columns})
+       X_valid = X_valid.astype({col: 'float64' for col in X_valid.select_dtypes('int').columns})
+       X_test = X_test.astype({col: 'float64' for col in X_test.select_dtypes('int').columns})
+
+    # Encoding categorical columns
+       encoder = OneHotEncoder(sparse_output=False, handle_unknown='ignore')
+       X_train_encoded = encoder.fit_transform(X_train[encode_columns])
+       X_valid_encoded = encoder.transform(X_valid[encode_columns])
+       X_test_encoded = encoder.transform(X_test[encode_columns])
+
+    # Ensure model directory exists before saving
+       if not os.path.exists(self.model_dir):
+           os.makedirs(self.model_dir)
+
+    # Save the encoder in the model directory
+       encoder_file_path = os.path.join(self.model_dir, 'encoder.pkl')
+       try:
+           with open(encoder_file_path, 'wb') as f:
+               pickle.dump(encoder, f)
+       except Exception as e:
+           print(f"Error saving encoder: {e}")
+    
+    # Convert the encoded arrays back into DataFrames with column names
+       encoded_train_df = pd.DataFrame(X_train_encoded, columns=encoder.get_feature_names_out(encode_columns))
+       encoded_valid_df = pd.DataFrame(X_valid_encoded, columns=encoder.get_feature_names_out(encode_columns))
+       encoded_test_df = pd.DataFrame(X_test_encoded, columns=encoder.get_feature_names_out(encode_columns))
+
+    # Concatenate the original features (cts_cols) and encoded categorical features all at once
+       X_train = pd.concat([X_train.drop(columns=encode_columns), encoded_train_df], axis=1)
+       X_valid = pd.concat([X_valid.drop(columns=encode_columns), encoded_valid_df], axis=1)
+       X_test = pd.concat([X_test.drop(columns=encode_columns), encoded_test_df], axis=1)
+    
+    # After concatenation, make sure target variables are aligned with features
+       y_train = y_train.loc[X_train.index]
+       y_valid = y_valid.loc[X_valid.index]
+       y_test = y_test.loc[X_test.index]
+    
+    # Scaling continuous columns
+       scaler = StandardScaler()
+       X_train[cts_cols] = scaler.fit_transform(X_train[cts_cols])
+       X_valid[cts_cols] = scaler.transform(X_valid[cts_cols])
+       X_test[cts_cols] = scaler.transform(X_test[cts_cols])
+    
+    # Print any null values
+       print(X_train.isnull().sum().sum())
+       print(X_test.isnull().sum().sum())
+       print(X_valid.isnull().sum().sum())
+    
+    # Save the scaler in the model directory
+       scaler_file_path = os.path.join(self.model_dir, 'standardscaler.pkl')
+       try:
+           with open(scaler_file_path, 'wb') as f:
+               pickle.dump(scaler, f)
+       except Exception as e:
+           print(f"Error saving scaler: {e}")
+
+       return X_train, X_valid, X_test, y_train, y_valid, y_test
 
     def find_best_model(self, X_train, y_train, X_valid, y_valid, model_params):
         """Performs hyperparameter tuning for Logistic Regression, RandomForest, and XGBoost using GridSearch."""
@@ -365,13 +453,21 @@ class ModelTrainer:
         mlflow.log_metric("train_f1_score", f1_train)
         mlflow.log_metric("test_f1_score", f1_test)
         
-        # Save the model using pickle
+        '''# Save the model using pickle
         model_file_path = os.path.join(self.model_dir, 'best_model.pkl')
         with open(model_file_path, 'wb') as f:
             pickle.dump(best_model, f)
-        input_example = X_train.sample(5)
+        input_example = X_train.sample(5)'''
+        # Save the best model using pickle
+        model_file_path = os.path.join(self.model_dir, 'best_model.pkl')
+        try:
+            with open(model_file_path, 'wb') as f:
+                  pickle.dump(best_model, f)
+        except Exception as e:
+            print(f"Error saving model: {e}")
 
         # Infer the signature (input and output types)
+        input_example = X_train.sample(5)
         signature = infer_signature(X_train, best_model.predict(X_train))
 
         # Log the model with signature and input example
@@ -381,6 +477,12 @@ class ModelTrainer:
             input_example=input_example, 
             signature=signature
         )
+        
+        # Log the encoder and scaler as artifacts in MLflow from the model directory
+        encoder_file_path = os.path.join(self.model_dir, 'encoder.pkl')
+        scaler_file_path = os.path.join(self.model_dir, 'standardscaler.pkl')
+        mlflow.log_artifact(encoder_file_path)
+        mlflow.log_artifact(scaler_file_path)
         # Create a dictionary of metrics to pass to Hopsworks
         metrics = {
         "train_accuracy": accuracy_train,
