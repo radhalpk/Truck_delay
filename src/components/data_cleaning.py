@@ -12,9 +12,11 @@ import seaborn as sns
 import hopsworks
 from sklearn.impute import KNNImputer
 from src.config import *
+import time
+from hsfs.client import exceptions as hsfs_exceptions
 
 # Define the path to the configuration file
-CONFIG_FILE_PATH = r'C:\Desktop\Truck Project\src\config\config.ini'
+CONFIG_FILE_PATH = '/Users/pavankumarradhala/Desktop/projects/Truck_delay/src/config/config.ini'
 
 class DataClean:
     def __init__(self):
@@ -158,7 +160,7 @@ class DataClean:
     
         return df_cleaned
 
-    def upsert_to_feature_group(self, fs, name, df, primary_key, version=1):
+    '''def upsert_to_feature_group(self, fs, name, df, primary_key, version=1):
         """Upsert data to a Hopsworks feature group or create a new feature group if it doesn't exist."""
         try:
             # Attempt to get the existing feature group
@@ -180,7 +182,57 @@ class DataClean:
 
             # Insert data into the new feature group
             new_fg.insert(df)
-            print(f"Feature group '{name}' created and data inserted.")
+            print(f"Feature group '{name}' created and data inserted.")'''
+   
+
+    
+
+    def upsert_to_feature_group(self, fs, name, df, primary_key, version=1, max_retries=3, retry_delay=60):
+       """Upsert data to a Hopsworks feature group or create a new feature group if it doesn't exist."""
+       try:
+           # Attempt to get the existing feature group
+           fg = fs.get_feature_group(name=name, version=version)
+           print(f"Feature group '{name}' exists. Upserting data...")
+        
+        # Try inserting data and handle parallel execution quota issues with retries
+           for attempt in range(max_retries):
+               try:
+                   fg.insert(df, write_options={"upsert": True})
+                   print(f"Data upserted successfully to '{name}'.")
+                   break
+               except hsfs_exceptions.RestAPIError as e:
+                   if 'Parallel executions quota reached' in str(e):
+                       print(f"Job execution quota reached, retrying in {retry_delay} seconds... (Attempt {attempt+1}/{max_retries})")
+                       time.sleep(retry_delay)
+                   else:
+                       raise e
+           else:
+               raise RuntimeError(f"Failed to upsert data to '{name}' after {max_retries} attempts.")
+    
+       except hsfs_exceptions.RestAPIError as e:
+        # If the feature group doesn't exist, create it
+           if 'Feature group not found' in str(e):
+               print(f"Feature group '{name}' not found. Creating a new feature group...")
+
+            # Create the feature group dynamically from the dataframe schema
+               new_fg = fs.create_feature_group(
+                name=name,
+                version=version,
+                primary_key=primary_key,
+                description=f"Feature group for {name}",
+                event_time='event_time'
+            )
+
+            # Insert data into the new feature group
+               new_fg.insert(df)
+               print(f"Feature group '{name}' created and data inserted.")
+           else:
+            # For any other errors, re-raise the exception
+               raise e
+       except Exception as e:
+           print(f"Error upserting data for {name}: {e}")
+           raise e
+
 
     def reg_catvar(self, df, cols):
         """Regularize categorical variables by converting them to lowercase strings."""

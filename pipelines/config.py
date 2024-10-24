@@ -1,4 +1,4 @@
-import configparser
+'''import configparser
 import os
 
 CONFIG_FILE_PATH = '/Users/pavankumarradhala/Desktop/projects/Truck_delay/src/config/config.ini'
@@ -19,4 +19,16 @@ print("Config Sections Loaded:", config.sections())
 if config.has_section('DATA'):
     print("model_dir:", config.get('DATA', 'model_dir'))
 else:
-    print("No section: 'DATA' found")
+    print("No section: 'DATA' found")'''
+    
+    
+import hopsworks
+
+api_key = 'dYTVrTVvbj6Qw82i.YGKHdS9snQYFgOADJIvLdvZ2n2S5BxIAOtvPUEmAyd56bvaG6xhhGyNM3nYbexaP'
+connection = hopsworks.login(api_key_value=api_key)
+
+if connection:
+    print("Successfully connected to Hopsworks!")
+else:
+    print("Failed to connect to Hopsworks.")
+

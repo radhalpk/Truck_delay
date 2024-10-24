@@ -483,7 +483,7 @@ import hsfs
 from bs4 import BeautifulSoup
 
 # Define the path to the configuration file
-CONFIG_FILE_PATH = r'C:\Desktop\Truck Project\src\config\config.ini'
+CONFIG_FILE_PATH = '/Users/pavankumarradhala/Desktop/projects/Truck_delay/src/config'
 config = configparser.RawConfigParser()
 config.read(CONFIG_FILE_PATH)
 
