@@ -9,8 +9,8 @@ sys.path.append(project_root)
 from src.components.data_ingestion import DataIngestion
 
 # Configuration file path
-CONFIG_FILE_PATH = os.path.join(project_root, 'src', 'config', 'config.ini')
-
+#CONFIG_FILE_PATH = os.path.join(project_root, 'src', 'config', 'config.ini')
+CONFIG_FILE_PATH = '/Users/pavankumarradhala/Desktop/projects/Truck_delay/src/config/config.ini'
 if __name__ == "__main__":
     try:
         STAGE_NAME = "DATA_INGESTION"
@@ -20,7 +20,7 @@ if __name__ == "__main__":
         ingestion = DataIngestion(CONFIG_FILE_PATH)
 
         # Fetch and store data
-        ingestion.fetch_and_store_data()
+        ingestion.ingest_data()
 
         print(f">>>>>> Stage completed <<<<<< : {STAGE_NAME}")
 

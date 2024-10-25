@@ -35,7 +35,7 @@ class DataIngestion:
             raise Exception(f"Failed to fetch file URLs from GitHub API: {response.status_code}")
 
     # Fetch data from GitHub and store it in PostgreSQL
-    def fetch_and_store_data(self):
+    def ingest_data(self):
         file_urls = self.fetch_file_urls()
         for url in file_urls:
             table_name = url.split('/')[-1].replace('.csv', '')

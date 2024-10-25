@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/pavankumarradhala/Desktop/projects/Truck_delay/mlruns/942661212231936769/baf688e69d4d44238a543205831a4d5f/artifacts
+end_time: 1729827534159
+entry_point_name: ''
+experiment_id: '942661212231936769'
+lifecycle_stage: active
+run_id: baf688e69d4d44238a543205831a4d5f
+run_name: classy-skink-104
+run_uuid: baf688e69d4d44238a543205831a4d5f
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1729827534151
+status: 3
+tags: []
+user_id: pavankumarradhala

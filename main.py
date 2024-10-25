@@ -10,12 +10,19 @@ from pipelines.stage_02_data_cleaning import DataCleaningPipeline
 from pipelines.data_modeling_pipeline import TruckDelayModelingPipeline
 from pipelines.data_merging_pipeline import FeatureEngineeringPipeline
 
-STAGE_NAME = "Data Ingestion"
+# Path to the config file
+CONFIG_FILE_PATH = '/Users/pavankumarradhala/Desktop/projects/Truck_delay/src/config/config.ini'
 
+
+STAGE_NAME = "Data Ingestion"
 try:
    print(">>>>>> Stage {STAGE_NAME} started <<<<<<") 
-   data_ingestion = DataIngestion()
-   data_ingestion.main()
+   ingestion = DataIngestion(CONFIG_FILE_PATH)
+   # Fetch and store data
+   ingestion.ingest_data()
+
+        # Close the database connection after all operations
+   ingestion.close_database_connection()
    print(">>>>>> Stage {STAGE_NAME} completed <<<<<<\n\nx==========x")
 except Exception as e:
         print((e))
@@ -34,7 +41,7 @@ except Exception as e:
 STAGE_NAME = "Data Transformation"
 try:
    print(">>>>>> Stage started <<<<<< :",STAGE_NAME)
-   obj = TruckDelayModelingPipeline()
+   obj = FeatureEngineeringPipeline()
    obj.main()
    print(">>>>>> Stage completed :", STAGE_NAME)
 except Exception as e:
@@ -44,7 +51,7 @@ except Exception as e:
 STAGE_NAME = "Model Training"
 try:
    print(">>>>>> Stage started <<<<<<:",STAGE_NAME)
-   obj = FeatureEngineeringPipeline()
+   obj = TruckDelayModelingPipeline()
    obj.main()
    print(">>>>>> Stage  completed <<<<<<>:", STAGE_NAME)
 except Exception as e:
