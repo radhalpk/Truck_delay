@@ -174,12 +174,13 @@ class ModelComponent:
         print(f"Model {model_type} successfully pushed to Hopsworks Model Registry!")
 
 '''
-import os
+'''import os
 import pickle
 import pandas as pd
 import configparser
 import mlflow
 from mlflow.models import infer_signature
+from sklearn.compose import ColumnTransformer
 from sklearn.model_selection import GridSearchCV
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.linear_model import LogisticRegression
@@ -224,7 +225,7 @@ class ModelTrainer:
         
         return train_df, validation_df, test_df
 
-    '''def prepare_data(self, train_df, validation_df, test_df, cts_cols, categorical_cols, encode_columns):
+    def prepare_data(self, train_df, validation_df, test_df, cts_cols, categorical_cols, encode_columns):
         """Prepares data for training by encoding specified categorical features and scaling continuous features."""
         
         # Separate target variable (delay)
@@ -288,7 +289,7 @@ class ModelTrainer:
         scaler_file_path = os.path.join(self.model_dir, 'standardscaler.pkl')
         with open(scaler_file_path, 'wb') as f:
            pickle.dump(scaler, f)
-        return X_train, X_valid, X_test, y_train, y_valid, y_test'''
+        return X_train, X_valid, X_test, y_train, y_valid, y_test
     
     def prepare_data(self, train_df, validation_df, test_df, cts_cols, categorical_cols, encode_columns):
        """Prepares data for training by encoding specified categorical features and scaling continuous features."""
@@ -419,82 +420,80 @@ class ModelTrainer:
         return best_model_name, best_model, best_model_params
 
     def final_model(self, X_train, X_test, y_train, y_test, best_model, best_model_params):
-        """Trains the final model using the best parameters and evaluates it on the test set."""
-        print("Training the best model on full train data...")
+       """Trains the final model using the best parameters and evaluates it on the test set."""
+       print("Training the best model on full train data...")
 
-        best_model.fit(X_train, y_train)
-        y_pred_test = best_model.predict(X_test)
-        y_pred_train=best_model.predict(X_train)
-        accuracy_test = accuracy_score(y_test, y_pred_test)
-        accuracy_train = accuracy_score(y_train, y_pred_train)
-        report_test = classification_report(y_test, y_pred_test)
-        report_train= classification_report(y_train,y_pred_train)
-        
-        print(f"Train Accuracy: {accuracy_train}")
-        print(f"Test Accuracy: {accuracy_test}")
-        print(f"Classification Report for Test:\n{report_test}")
-        print(f"Classification Report for Train:\n{report_train}")
+       best_model.fit(X_train, y_train)
+       y_pred_test = best_model.predict(X_test)
+       y_pred_train = best_model.predict(X_train)
+       accuracy_test = accuracy_score(y_test, y_pred_test)
+       accuracy_train = accuracy_score(y_train, y_pred_train)
+       report_test = classification_report(y_test, y_pred_test)
+       report_train = classification_report(y_train, y_pred_train)
+    
+       print(f"Train Accuracy: {accuracy_train}")
+       print(f"Test Accuracy: {accuracy_test}")
+       print(f"Classification Report for Test:\n{report_test}")
+       print(f"Classification Report for Train:\n{report_train}")
 
-        mlflow.log_metric("train_accuracy",accuracy_train)
-        mlflow.log_metric("test_accuracy", accuracy_test)
-        
-        # Calculate F1 score
-        f1_train = f1_score(y_train, y_pred_train, average='weighted')
-        f1_test = f1_score(y_test, y_pred_test, average='weighted')
-        
-        # Log the classification report as artifacts
-        with open("classification_report_test.txt", "w") as f_test:
-            f_test.write(report_test)
-        with open("classification_report_train.txt", "w") as f_train:
-            f_train.write(report_train)
-        
-        mlflow.log_artifact("classification_report_test.txt")
-        mlflow.log_artifact("classification_report_train.txt")
-        mlflow.log_metric("train_f1_score", f1_train)
-        mlflow.log_metric("test_f1_score", f1_test)
-        
-        '''# Save the model using pickle
-        model_file_path = os.path.join(self.model_dir, 'best_model.pkl')
-        with open(model_file_path, 'wb') as f:
-            pickle.dump(best_model, f)
-        input_example = X_train.sample(5)'''
-        # Save the best model using pickle
-        model_file_path = os.path.join(self.model_dir, 'best_model.pkl')
-        try:
-            with open(model_file_path, 'wb') as f:
-                  pickle.dump(best_model, f)
-        except Exception as e:
-            print(f"Error saving model: {e}")
+       mlflow.log_metric("train_accuracy", accuracy_train)
+       mlflow.log_metric("test_accuracy", accuracy_test)
+    
+    # Calculate F1 score
+       f1_train = f1_score(y_train, y_pred_train, average='weighted')
+       f1_test = f1_score(y_test, y_pred_test, average='weighted')
+    
+    # Log the classification report as artifacts
+       with open("classification_report_test.txt", "w") as f_test:
+          f_test.write(report_test)
+       with open("classification_report_train.txt", "w") as f_train:
+           f_train.write(report_train)
+    
+       mlflow.log_artifact("classification_report_test.txt")
+       mlflow.log_artifact("classification_report_train.txt")
+       mlflow.log_metric("train_f1_score", f1_train)
+       mlflow.log_metric("test_f1_score", f1_test)
+    
+    # Save the best model using pickle
+       model_file_path = os.path.join(self.model_dir, 'best_model.pkl')
+       try:
+           with open(model_file_path, 'wb') as f:
+               pickle.dump(best_model, f)
+       except Exception as e:
+           print(f"Error saving model: {e}")
 
-        # Infer the signature (input and output types)
-        input_example = X_train.sample(5)
-        signature = infer_signature(X_train, best_model.predict(X_train))
+    # Infer the signature (input and output types)
+       input_example = X_train.sample(5)
+       signature = infer_signature(X_train, best_model.predict(X_train))
 
-        # Log the model with signature and input example
-        mlflow.sklearn.log_model(
-            sk_model=best_model, 
-            artifact_path="best_model", 
-            input_example=input_example, 
-            signature=signature
-        )
-        
-        # Log the encoder and scaler as artifacts in MLflow from the model directory
-        encoder_file_path = os.path.join(self.model_dir, 'encoder.pkl')
-        scaler_file_path = os.path.join(self.model_dir, 'standardscaler.pkl')
-        mlflow.log_artifact(encoder_file_path)
-        mlflow.log_artifact(scaler_file_path)
-        # Create a dictionary of metrics to pass to Hopsworks
-        metrics = {
+    # Log the model with signature, input example, and register it with MLflow
+       mlflow.sklearn.log_model(
+           sk_model=best_model, 
+           artifact_path="best_model", 
+           input_example=input_example, 
+           signature=signature,
+           registered_model_name="TruckDelayModeling"  # Adjust the name as needed
+    )
+    
+    # Log the encoder and scaler as artifacts in MLflow from the model directory
+       encoder_file_path = os.path.join(self.model_dir, 'encoder.pkl')
+       scaler_file_path = os.path.join(self.model_dir, 'standardscaler.pkl')
+       mlflow.log_artifact(encoder_file_path)
+       mlflow.log_artifact(scaler_file_path)
+    
+    # Create a dictionary of metrics to pass to Hopsworks
+       metrics = {
         "train_accuracy": accuracy_train,
         "test_accuracy": accuracy_test,
         "train_f1_score": f1_train,
         "test_f1_score": f1_test
-        }
-        
-        return {
+    }
+    
+       return {
         "model_file_path": model_file_path,
         "metrics": metrics
-        }
+    }
+
     
     def register_model_in_hopsworks(self, project, model_name, metrics, model_file_path):
         """Registers the trained model in the Hopsworks Model Registry and prepares it for deployment."""
@@ -548,4 +547,292 @@ class ModelTrainer:
 #         deployment.start()
 #         print(f"Model {model_name} deployed successfully.")
 #     except Exception as e:
-#         print(f"Error during model deployment: {e}")
+#         print(f"Error during model deployment: {e}")'''
+
+import os
+import pickle
+import zipfile
+import pandas as pd
+import configparser
+import mlflow
+from mlflow.models import infer_signature
+from sklearn.compose import ColumnTransformer
+from sklearn.model_selection import GridSearchCV
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
+from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
+from xgboost import XGBClassifier
+from sklearn.metrics import accuracy_score, classification_report, f1_score
+from datetime import datetime, timezone
+
+# Define the path to the configuration file
+CONFIG_FILE_PATH = '/Users/pavankumarradhala/Desktop/projects/Truck_delay/src/config/config.ini'
+
+class ModelTrainer:
+    def __init__(self):
+        config = configparser.RawConfigParser()
+        config.read(CONFIG_FILE_PATH)
+        # Add this debug statement
+        print(f"Config Sections: {config.sections()}")
+        self.model_dir = config.get('DATA', 'model_dir')
+
+    def read_data(self, feature_store, feature_group_name):
+        """Reads data from Hopsworks feature store."""
+        try:
+            fg_metadata = feature_store.get_feature_group(feature_group_name, version=1)
+            if fg_metadata is None:
+                raise ValueError(f"Feature group {feature_group_name} not found.")
+            fg_df = fg_metadata.read() if not isinstance(fg_metadata, pd.DataFrame) else fg_metadata
+            return fg_df
+        except Exception as e:
+            print(f"Error reading feature group {feature_group_name}: {e}")
+            return None
+
+    def split_data(self, final_merge):
+        """Splits data into train, validation, and test sets based on date."""
+        # Fixing the deprecation warning here by using `datetime.now(timezone.utc)`
+        date_split_train = datetime.now(timezone.utc).replace(year=2019, month=1, day=30, hour=0, minute=0, second=0, microsecond=0)
+        date_split_valid = datetime.now(timezone.utc).replace(year=2019, month=2, day=7, hour=0, minute=0, second=0, microsecond=0)
+
+
+        train_df = final_merge[final_merge['estimated_arrival'] <= date_split_train]
+        validation_df = final_merge[(final_merge['estimated_arrival'] > date_split_train) & 
+                                    (final_merge['estimated_arrival'] <= date_split_valid)]
+        test_df = final_merge[final_merge['estimated_arrival'] > date_split_valid]
+        
+        return train_df, validation_df, test_df
+
+    def prepare_data(self, train_df, validation_df, test_df, cts_cols, categorical_cols, encode_columns):
+        """Prepares data for training by encoding specified categorical features and scaling continuous features."""
+        
+        # Separate target variable (delay)
+        y_train = train_df['delay']
+        y_valid = validation_df['delay']
+        y_test = test_df['delay']
+        
+        # Feature sets (X)
+        X_train = train_df[cts_cols + categorical_cols].copy()
+        X_valid = validation_df[cts_cols + categorical_cols].copy()
+        X_test = test_df[cts_cols + categorical_cols].copy()
+        
+        # Reset the index to avoid misalignment after transformations
+        X_train.reset_index(drop=True, inplace=True)
+        X_valid.reset_index(drop=True, inplace=True)
+        X_test.reset_index(drop=True, inplace=True)
+        y_train.reset_index(drop=True, inplace=True)
+        y_valid.reset_index(drop=True, inplace=True)
+        y_test.reset_index(drop=True, inplace=True)
+        # Convert all integer columns to float64
+        X_train = X_train.astype({col: 'float64' for col in X_train.select_dtypes('int').columns})
+        X_valid = X_valid.astype({col: 'float64' for col in X_valid.select_dtypes('int').columns})
+        X_test = X_test.astype({col: 'float64' for col in X_test.select_dtypes('int').columns})
+
+        # Encoding categorical columns
+        encoder = OneHotEncoder(sparse_output=False, handle_unknown='ignore')
+        X_train_encoded = encoder.fit_transform(X_train[encode_columns])
+        X_valid_encoded = encoder.transform(X_valid[encode_columns])
+        X_test_encoded = encoder.transform(X_test[encode_columns])
+        
+        # Convert the encoded arrays back into DataFrames with column names
+        encoded_train_df = pd.DataFrame(X_train_encoded, columns=encoder.get_feature_names_out(encode_columns))
+        encoded_valid_df = pd.DataFrame(X_valid_encoded, columns=encoder.get_feature_names_out(encode_columns))
+        encoded_test_df = pd.DataFrame(X_test_encoded, columns=encoder.get_feature_names_out(encode_columns))
+
+        # Concatenate the original features (cts_cols) and encoded categorical features all at once
+        X_train = pd.concat([X_train.drop(columns=encode_columns), encoded_train_df], axis=1)
+        X_valid = pd.concat([X_valid.drop(columns=encode_columns), encoded_valid_df], axis=1)
+        X_test = pd.concat([X_test.drop(columns=encode_columns), encoded_test_df], axis=1)
+        
+        # After concatenation, make sure target variables are aligned with features
+        y_train = y_train.loc[X_train.index]
+        y_valid = y_valid.loc[X_valid.index]
+        y_test = y_test.loc[X_test.index]
+        
+        # Scaling continuous columns
+        scaler = StandardScaler()
+        X_train[cts_cols] = scaler.fit_transform(X_train[cts_cols])
+        X_valid[cts_cols] = scaler.transform(X_valid[cts_cols])
+        X_test[cts_cols] = scaler.transform(X_test[cts_cols])
+        print(X_train.shape)
+        print(X_train.isnull().sum().sum())
+        print(X_test.isnull().sum().sum())
+        print(X_valid.isnull().sum().sum())
+        
+        return X_train, X_valid, X_test, y_train, y_valid, y_test, encoder, scaler
+
+    def find_best_model(self, X_train, y_train, X_valid, y_valid, model_params):
+        """Performs hyperparameter tuning for Logistic Regression, RandomForest, and XGBoost using GridSearch."""
+        
+        best_model = None
+        best_score = 0
+        best_model_name = None
+        best_model_params = None
+
+        for model_name, model_data in model_params.items():
+            model = model_data['model']
+            params = model_data['parameters']
+            
+            print(f"Training model: {model_name}...")
+            
+            # Perform grid search
+            grid_search = GridSearchCV(estimator=model, param_grid=params, scoring='accuracy', cv=10, verbose=0, n_jobs=-1)
+            grid_search.fit(X_train, y_train)
+            
+            # Get the best estimator from grid search
+            best_model_candidate = grid_search.best_estimator_
+            
+            # Create a nested run to log parameters without overwriting
+            with mlflow.start_run(nested=True):
+                try:
+                    # Log best parameters after fitting
+                    for param_key, param_value in grid_search.best_params_.items():
+                        mlflow.log_param(param_key, param_value)
+                except mlflow.MlflowException as e:
+                    print(f"Error logging parameters for {model_name}: {e}")
+            
+            # Calculate validation accuracy
+            score = accuracy_score(y_valid, best_model_candidate.predict(X_valid))
+            
+            print(f"{model_name} validation accuracy: {score}")
+            mlflow.log_metric(f'{model_name}_validation_score', score)
+            print(f"Best params for {model_name}: {grid_search.best_params_}")
+            print(f"Validation score for {model_name}: {score}")
+
+            # Update best model based on validation score
+            if score > best_score:
+                best_score = score  # Use the validation score for comparison
+                best_model_name = model_name
+                best_model = best_model_candidate
+                best_model_params = grid_search.best_params_
+
+        print(f"\nBest Model: {best_model_name} with validation accuracy: {best_score}")
+        return best_model_name, best_model, best_model_params
+
+    def final_model(self, X_train, X_test, y_train, y_test, best_model, encoder, scaler, best_model_params, model_name):
+        """Trains the final model using the best parameters and evaluates it on the test set."""
+        print("Training the best model on full train data...")
+
+        best_model.fit(X_train, y_train)
+        y_pred_test = best_model.predict(X_test)
+        y_pred_train=best_model.predict(X_train)
+        accuracy_test = accuracy_score(y_test, y_pred_test)
+        accuracy_train = accuracy_score(y_train, y_pred_train)
+        report_test = classification_report(y_test, y_pred_test)
+        report_train= classification_report(y_train,y_pred_train)
+        
+        print(f"Train Accuracy: {accuracy_train}")
+        print(f"Test Accuracy: {accuracy_test}")
+        print(f"Classification Report for Test:\n{report_test}")
+        print(f"Classification Report for Train:\n{report_train}")
+
+        mlflow.log_metric("train_accuracy",accuracy_train)
+        mlflow.log_metric("test_accuracy", accuracy_test)
+        
+        # Calculate F1 score
+        f1_train = f1_score(y_train, y_pred_train, average='weighted')
+        f1_test = f1_score(y_test, y_pred_test, average='weighted')
+        
+        # Log the classification report as artifacts
+        with open("classification_report_test.txt", "w") as f_test:
+            f_test.write(report_test)
+        with open("classification_report_train.txt", "w") as f_train:
+            f_train.write(report_train)
+        
+        mlflow.log_artifact("classification_report_test.txt")
+        mlflow.log_artifact("classification_report_train.txt")
+        mlflow.log_metric("train_f1_score", f1_train)
+        mlflow.log_metric("test_f1_score", f1_test)
+        
+        # Save the model using pickle
+        model_file_path = os.path.join(self.model_dir, 'best_model.pkl')
+        with open(model_file_path, 'wb') as f:
+            pickle.dump(best_model, f)
+        encoder_file_path = os.path.join(self.model_dir, 'encoder.pkl')
+        scaler_file_path = os.path.join(self.model_dir, 'scaler.pkl')
+        with open(encoder_file_path, 'wb') as f_enc:
+            pickle.dump(encoder, f_enc)
+        with open(scaler_file_path, 'wb') as f_scal:
+            pickle.dump(scaler, f_scal)
+        input_example = X_train.sample(5)
+        mlflow.log_artifact(model_file_path)
+        mlflow.log_artifact(encoder_file_path)
+        mlflow.log_artifact(scaler_file_path)
+
+        # Infer the signature (input and output types)
+        signature = infer_signature(X_train, best_model.predict(X_train))
+
+        # Log the model with signature and input example
+        mlflow.sklearn.log_model(
+            sk_model=best_model, 
+            artifact_path="models", 
+            input_example=input_example, 
+            signature=signature
+        )
+        # Register the model in MLflow
+        try:
+            mlflow.register_model(f"runs:/{mlflow.active_run().info.run_id}/model", model_name)
+            print(f"Model '{model_name}' registered successfully in MLflow.")
+        except Exception as e:
+            print(f"Error registering model in MLflow: {e}")
+        
+        # Create a dictionary of metrics to pass to Hopsworks
+        metrics = {
+        "train_accuracy": accuracy_train,
+        "test_accuracy": accuracy_test,
+        "train_f1_score": f1_train,
+        "test_f1_score": f1_test
+        }
+        
+        return {
+        "model_file_path": model_file_path,
+        "metrics": metrics,
+        "encoder_file_path":encoder_file_path,
+        "scaler_file_path":scaler_file_path
+        }
+    
+
+    def register_model_in_hopsworks(self, project, model_name, metrics, model_file_path, encoder_file_path,scaler_file_path):
+        """Registers the trained model in the Hopsworks Model Registry and prepares it for deployment."""
+        model_registry = project.get_model_registry()
+        
+        # Attempt to get the existing model
+        existing_model = None
+        try:
+            existing_model = model_registry.get_model(model_name)
+        except Exception as e:
+            print(f"No existing model found with name '{model_name}': {e}")
+
+        # Delete existing model to avoid conflicts
+        if existing_model:
+            existing_model.delete()
+            print(f"Deleted existing model '{model_name}'.")
+
+        # Create a new model entry
+        new_version = 1  # Start with version 1 if not found or after deletion
+        try:
+            # Create a zip file for the model, encoder, and scaler
+            zip_file_path = f"{model_name}_artifacts.zip"
+            with zipfile.ZipFile(zip_file_path, 'w') as zipf:
+                for file_path in [model_file_path, encoder_file_path, scaler_file_path]:
+                    if os.path.exists(file_path):
+                        zipf.write(file_path, os.path.basename(file_path))
+                        print(f"Added {file_path} to zip archive.")
+                    else:
+                        print(f"File not found: {file_path}")
+            
+            # Now save the zip file in Hopsworks Model Registry
+            hopsworks_model = model_registry.python.create_model(
+                name=model_name,
+                metrics=metrics,
+                description=f"{model_name} model for predicting truck delays",
+                version=new_version
+            )
+            hopsworks_model.save(zip_file_path)  # Save the zip file
+            
+            print(f"Model '{model_name}' version {new_version} registered successfully with artifacts in Hopsworks.")
+
+            # Clean up: remove the zip file after uploading
+            os.remove(zip_file_path)
+
+        except Exception as e:
+            print(f"Error saving to Hopsworks: {e}")

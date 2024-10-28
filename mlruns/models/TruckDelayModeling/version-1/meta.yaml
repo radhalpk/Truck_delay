@@ -1,0 +1,14 @@
+aliases: []
+creation_timestamp: 1730073863571
+current_stage: None
+description: null
+last_updated_timestamp: 1730073863571
+name: TruckDelayModeling
+run_id: b4c5ab8971f84162952cc30be1b4cec1
+run_link: null
+source: file:///Users/pavankumarradhala/Desktop/projects/Truck_delay/mlruns/942661212231936769/b4c5ab8971f84162952cc30be1b4cec1/artifacts/best_model
+status: READY
+status_message: null
+storage_location: file:///Users/pavankumarradhala/Desktop/projects/Truck_delay/mlruns/942661212231936769/b4c5ab8971f84162952cc30be1b4cec1/artifacts/best_model
+user_id: null
+version: 1

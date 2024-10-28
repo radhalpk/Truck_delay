@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/pavankumarradhala/Desktop/projects/Truck_delay/mlruns/899997451749165338/30286bc5608e40f79ddeda55cfbc9471/artifacts
+end_time: 1730079556690
+entry_point_name: ''
+experiment_id: '899997451749165338'
+lifecycle_stage: active
+run_id: 30286bc5608e40f79ddeda55cfbc9471
+run_name: capable-auk-759
+run_uuid: 30286bc5608e40f79ddeda55cfbc9471
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1730079556494
+status: 4
+tags: []
+user_id: pavankumarradhala

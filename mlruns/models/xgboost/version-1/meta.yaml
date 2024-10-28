@@ -1,0 +1,14 @@
+aliases: []
+creation_timestamp: 1730133092463
+current_stage: None
+description: null
+last_updated_timestamp: 1730133092463
+name: xgboost
+run_id: 3945ddb3c4044893be4aa56c89f9141d
+run_link: null
+source: file:///Users/pavankumarradhala/Desktop/projects/Truck_delay/mlruns/942661212231936769/3945ddb3c4044893be4aa56c89f9141d/artifacts/model
+status: READY
+status_message: null
+storage_location: file:///Users/pavankumarradhala/Desktop/projects/Truck_delay/mlruns/942661212231936769/3945ddb3c4044893be4aa56c89f9141d/artifacts/model
+user_id: null
+version: 1

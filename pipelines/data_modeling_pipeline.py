@@ -111,7 +111,6 @@ if __name__ == "__main__":
         raise e'''
 
 
-
 import os.path as path
 import os
 import sys
@@ -132,6 +131,7 @@ import mlflow
 import mlflow.sklearn
 from sklearn.metrics import accuracy_score, classification_report
 from sklearn.pipeline import Pipeline
+import tempfile
 # Configuration file path
 CONFIG_FILE_PATH = "/Users/pavankumarradhala/Desktop/projects/Truck_delay/src/config/config.ini"
 
@@ -144,7 +144,6 @@ MODEL_DIR = config.get('DATA', 'model_dir')
 project = hopsworks.login()
 fs = project.get_feature_store()
 
-# Pipeline Class
 class TruckDelayModelingPipeline:
     def __init__(self):
         config = configparser.RawConfigParser()
@@ -186,7 +185,7 @@ class TruckDelayModelingPipeline:
                 encode_columns = self.get_encoder_columns()
 
                 # Prepare data (encode categorical and scale continuous features)
-                X_train, X_valid, X_test, y_train, y_valid, y_test = self.model_trainer.prepare_data(
+                X_train, X_valid, X_test, y_train, y_valid, y_test, encoder, scaler = self.model_trainer.prepare_data(
                     train_df, validation_df, test_df, cts_cols, cat_cols, encode_columns
                 )
 
@@ -205,17 +204,29 @@ class TruckDelayModelingPipeline:
                     print(f"Best Model: {best_model_name}")
                     print(f"Best Parameters: {best_model_params}")
                     result = self.model_trainer.final_model(
-                        X_train, X_test, y_train, y_test, best_model, best_model_params
+                        X_train, X_test, y_train, y_test, best_model, encoder, scaler, best_model_params, best_model_name
                     )
                     model_file_path = result["model_file_path"]
                     metrics = result["metrics"]
                     # Register the final model in Hopsworks Model Registry
-                    self.model_trainer.register_model_in_hopsworks(project, best_model_name, metrics, model_file_path)
+                    self.model_trainer.register_model_in_hopsworks(
+                        project, best_model_name, metrics, model_file_path, result["encoder_file_path"], result["scaler_file_path"]
+                    )
 
         except Exception as e:
-            mlflow.log_artifact("Error during model training")
-            print(f"Error: {e}")
+            error_message = f"Error during model training: {e}"
+            self.log_error_message(error_message)
             raise e
+
+    def log_error_message(self, error_message):
+        """Logs error messages as artifacts in MLflow."""
+        # Create a temporary file with the error message
+        with tempfile.NamedTemporaryFile(delete=False, mode='w', suffix='.txt') as temp_file:
+            temp_file.write(error_message)
+            temp_file_path = temp_file.name
+        # Log the file to MLflow
+        mlflow.log_artifact(temp_file_path)
+        print(f"Logged error message to: {temp_file_path}")
 
     def verify_dataset(self, final_merge):
         """Verifies the structure and columns of the dataset."""
@@ -278,7 +289,7 @@ class TruckDelayModelingPipeline:
                     'max_depth': [4,5],             # Control tree depth (reduce to avoid overfitting)
                     'n_estimators': [400,500],     # Control the number of trees
                     'learning_rate': [0.01],        # Lower learning rate can help with generalization
-                    'subsample': [0.4, 0.5, 0.6],        # Fraction of samples to use per tree
+                    'subsample': [0.4, 0.5, 0.6],   # Fraction of samples to use per tree
                 }
             }
         }
@@ -290,5 +301,5 @@ if __name__ == '__main__':
         obj.main()
         print(">>>>>> Stage completed <<<<<< : MODEL TRAINING")
     except Exception as e:
-        print(e)
+        print(f"Exception during model training: {e}")
         raise e
