@@ -16,13 +16,15 @@ import time
 from hsfs.client import exceptions as hsfs_exceptions
 
 # Define the path to the configuration file
-CONFIG_FILE_PATH = '/Users/pavankumarradhala/Desktop/projects/Truck_delay/src/config/config.ini'
+#CONFIG_FILE_PATH = '/Users/pavankumarradhala/Desktop/projects/Truck_delay/src/config/config.ini'
+
+
 
 class DataClean:
     def __init__(self):
         # Load config file for database credentials and Hopsworks API key
         self.config = configparser.ConfigParser()
-        self.config.read(CONFIG_FILE_PATH)
+        #self.config.read(CONFIG_FILE_PATH)
 
         # PostgreSQL Database Config
         self.db_config = {

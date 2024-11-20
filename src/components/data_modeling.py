@@ -550,6 +550,7 @@ class ModelTrainer:
 #         print(f"Error during model deployment: {e}")'''
 
 import os
+import sys
 import pickle
 import zipfile
 import pandas as pd
@@ -566,7 +567,13 @@ from sklearn.metrics import accuracy_score, classification_report, f1_score
 from datetime import datetime, timezone
 
 # Define the path to the configuration file
-CONFIG_FILE_PATH = '/Users/pavankumarradhala/Desktop/projects/Truck_delay/src/config/config.ini'
+#CONFIG_FILE_PATH = '/Users/pavankumarradhala/Desktop/projects/Truck_delay/src/config/config.ini'
+
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+sys.path.append(project_root)
+
+# Dynamic path to the config file
+CONFIG_FILE_PATH = os.path.join(project_root, 'src', 'config', 'config.ini')
 
 class ModelTrainer:
     def __init__(self):
@@ -836,3 +843,4 @@ class ModelTrainer:
 
         except Exception as e:
             print(f"Error saving to Hopsworks: {e}")
+            

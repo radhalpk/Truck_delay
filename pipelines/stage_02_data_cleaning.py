@@ -141,6 +141,7 @@ project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.append(project_root)
 
 from src.components.data_cleaning import DataClean
+CONFIG_FILE_PATH = os.path.join(project_root, 'src', 'config', 'config.ini')
 
 STAGE_NAME = "Data Cleaning"
 cleaning_obj = DataClean()

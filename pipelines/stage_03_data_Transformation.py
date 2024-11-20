@@ -239,6 +239,8 @@ project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.append(project_root)
 
 from src.components.data_merging import FeatureEngineering
+CONFIG_FILE_PATH = os.path.join(project_root, 'src', 'config', 'config.ini')
+
 
 STAGE_NAME = "Data Merging"
 project = hopsworks.login()

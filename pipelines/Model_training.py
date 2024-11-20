@@ -133,7 +133,8 @@ from sklearn.metrics import accuracy_score, classification_report
 from sklearn.pipeline import Pipeline
 import tempfile
 # Configuration file path
-CONFIG_FILE_PATH = "/Users/pavankumarradhala/Desktop/projects/Truck_delay/src/config/config.ini"
+CONFIG_FILE_PATH = os.path.join(project_root, 'src', 'config', 'config.ini')
+
 
 # Configuration setup
 config = configparser.RawConfigParser()

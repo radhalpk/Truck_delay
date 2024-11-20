@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/pavankumarradhala/Desktop/projects/Truck_delay/mlruns/942661212231936769/a48101cbe00f41059dbab3c51a8c7d0f/artifacts
+end_time: 1731271508901
+entry_point_name: ''
+experiment_id: '942661212231936769'
+lifecycle_stage: active
+run_id: a48101cbe00f41059dbab3c51a8c7d0f
+run_name: traveling-calf-604
+run_uuid: a48101cbe00f41059dbab3c51a8c7d0f
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1731271508893
+status: 3
+tags: []
+user_id: pavankumarradhala

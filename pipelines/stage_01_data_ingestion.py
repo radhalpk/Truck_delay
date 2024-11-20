@@ -10,7 +10,9 @@ from src.components.data_ingestion import DataIngestion
 
 # Configuration file path
 #CONFIG_FILE_PATH = os.path.join(project_root, 'src', 'config', 'config.ini')
-CONFIG_FILE_PATH = '/Users/pavankumarradhala/Desktop/projects/Truck_delay/src/config/config.ini'
+#CONFIG_FILE_PATH = '/Users/pavankumarradhala/Desktop/projects/Truck_delay/src/config/config.ini'
+CONFIG_FILE_PATH = os.path.join(project_root, 'src', 'config', 'config.ini')
+
 if __name__ == "__main__":
     try:
         STAGE_NAME = "DATA_INGESTION"

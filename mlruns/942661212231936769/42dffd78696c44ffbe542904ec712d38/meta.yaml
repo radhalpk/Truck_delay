@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/pavankumarradhala/Desktop/projects/Truck_delay/mlruns/942661212231936769/42dffd78696c44ffbe542904ec712d38/artifacts
+end_time: 1731279057786
+entry_point_name: ''
+experiment_id: '942661212231936769'
+lifecycle_stage: active
+run_id: 42dffd78696c44ffbe542904ec712d38
+run_name: intelligent-eel-228
+run_uuid: 42dffd78696c44ffbe542904ec712d38
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1731279057778
+status: 3
+tags: []
+user_id: pavankumarradhala
